@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', '*')
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['158.160.75.66', '127.0.0.1', 'localhost', 'foodgram-nk.hopto.org']
 
 AUTH_USER_MODEL = 'users.User'
 
