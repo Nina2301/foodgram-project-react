@@ -1,7 +1,7 @@
 from django.db import transaction
 from django.db.models import F
 from django.shortcuts import get_object_or_404
-from djoser.serializers import UserSerializer
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import (Ingredient, IngredientsInRecipe, Recipe, Subscribe,
                             Tag)
@@ -23,6 +23,15 @@ class TagSerializer(ModelSerializer):
     class Meta:
         model = Tag
         fields = '__all__'
+
+
+class CustomUserCreateSerializer(UserCreateSerializer):
+    class Meta:
+        model = User
+        fields = tuple(User.REQUIRED_FIELDS) + (
+            User.USERNAME_FIELD,
+            'password',
+        )
 
 
 class CustomUserSerializer(UserSerializer):

@@ -108,7 +108,7 @@ class RecipeViewSet(ModelViewSet):
         response = self.create_response(shopping_list, filename)
         return response
 
-    def get_ingredient_data(user):
+    def get_ingredient_data(self, user):
         ingredients = IngredientsInRecipe.objects.filter(
             recipe__shopping_cart__user=user
         ).values(
@@ -117,7 +117,7 @@ class RecipeViewSet(ModelViewSet):
         ).annotate(amount=Sum('amount'))
         return ingredients
 
-    def create_shopping_list(user, ingredient_data):
+    def create_shopping_list(self, user, ingredient_data):
         today = datetime.today()
         shopping_list = (
             f'Список покупок для: {user.get_full_name()}\n\n'
@@ -132,11 +132,11 @@ class RecipeViewSet(ModelViewSet):
         shopping_list += f'\n\nFoodgram ({today:%Y})'
         return shopping_list
 
-    def get_filename(user):
+    def get_filename(self, user):
         filename = f'{user.username}_shopping_list.txt'
         return filename
 
-    def create_response(shopping_list, filename):
+    def create_response(self, shopping_list, filename):
         response = HttpResponse(shopping_list, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return response

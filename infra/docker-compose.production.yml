@@ -14,16 +14,16 @@ services:
       - pg_data:/var/lib/postgresql/data
     restart: always
   backend:
-    build: ../backend/
+    image: nina2301/foodgram_backend
     env_file:
       - ./.env
     volumes:
-      - backend_static:/app/backend_static
-      - backend_media:/app/backend_media
+      - backend_static:/app/static
+      - backend_media:/app/media
     depends_on:
       - db
   frontend:
-    build: ../frontend/
+    image: nina2301/foodgram_frontend
     volumes:
       - ../frontend/:/app/result_build/
   nginx:
