@@ -11,11 +11,14 @@ SECRET_KEY = os.getenv('SECRET_KEY', '*')
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['158.160.75.66', '127.0.0.1', 'localhost', 'foodgram-nk.hopto.org']
+ALLOWED_HOSTS = ['*', '158.160.75.66', '127.0.0.1', 'localhost', 'foodgram-nk.hopto.org']
 
 AUTH_USER_MODEL = 'users.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','http://*.127.0.0.1',
+                        'http://localhost']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -69,8 +72,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'django'),
         'USER': os.getenv('POSTGRES_USER', 'django'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
-        'HOST': os.getenv('DB_HOST', ''),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'django'),
+        'HOST': os.getenv('DB_HOST', 'db'),
         'PORT': os.getenv('DB_PORT', 5432)
     }
 }
@@ -133,7 +136,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/backend_static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'backend_static/')
+STATIC_ROOT = '/app/backend_static/'
 
 MEDIA_URL = '/backend_media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'backend_media')
+MEDIA_ROOT = '/app/backend_media/'
