@@ -11,48 +11,44 @@ from rest_framework.response import Response
 from .models import User
 
 
-class ViewSetForUsers(UserViewSet):
+class CustomUserViewSet(UserViewSet):
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
     pagination_class = CustomPageNumberPagination
 
     @action(
         detail=True,
-        methods=['post'],
+        methods=['post', 'delete'],
         permission_classes=[IsAuthenticated]
     )
     def subscribe(self, request, **kwargs):
-        user = request.user
+        user = self.request.user
         author_id = self.kwargs.get('id')
         author = get_object_or_404(User, id=author_id)
-        serializer = SubscribeSerializer(
-            author,
-            data=request.data,
-            context={"request": request}
-        )
-        serializer.is_valid(raise_exception=True)
-        Subscribe.objects.create(user=user, author=author)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    @subscribe.mapping.delete
-    def unsubscribe(self, request, **kwargs):
-        user = request.user
-        author_id = self.kwargs.get('id')
-        author = get_object_or_404(User, id=author_id)
-        subscription = get_object_or_404(
-            Subscribe,
-            user=user,
-            author=author
-        )
-        subscription.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if self.request.method == 'POST':
+            serializer = SubscribeSerializer(
+                author,
+                data=request.data,
+                context={"request": request}
+            )
+            serializer.is_valid(raise_exception=True)
+            Subscribe.objects.create(user=user, author=author)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if self.request.method == 'DELETE':
+            subscription = get_object_or_404(
+                Subscribe,
+                user=user,
+                author=author
+            )
+            subscription.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=False,
         permission_classes=[IsAuthenticated]
     )
     def subscriptions(self, request):
-        user = request.user
+        user = self.request.user
         queryset = User.objects.filter(subscribing__user=user)
         pages = self.paginate_queryset(queryset)
         serializer = SubscribeSerializer(pages,
