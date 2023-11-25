@@ -6,7 +6,6 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import (Ingredient, IngredientsInRecipe, Recipe, Subscribe,
                             Tag)
-from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import IntegerField, SerializerMethodField
 from rest_framework.relations import PrimaryKeyRelatedField
@@ -86,16 +85,18 @@ class FollowSerializer(ModelSerializer):
         user = data['user']['id']
         author = data['author']['id']
         subscribe_exist = Subscribe.objects.filter(
-             user=user, author__id=author
+            user=user, author__id=author
         ).exists()
         if user == author:
             raise ValidationError(
                 {"errors": 'Нельзя подписываться на самого себя'}
             )
         elif subscribe_exist:
-            raise ValidationError({"errors": 'Вы уже подписаны на этого автора'})
+            raise ValidationError({
+                "errors": 'Вы уже подписаны на этого автора'
+            })
         return data
-    
+
     def create(self, validated_data):
         author = validated_data.get('author')
         author = get_object_or_404(User, pk=author.get('id'))

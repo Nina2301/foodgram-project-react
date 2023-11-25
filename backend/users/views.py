@@ -1,5 +1,6 @@
 from api.pagination import CustomPageNumberPagination
-from api.serializers import CustomUserSerializer, FollowSerializer, SubscribeSerializer
+from api.serializers import (CustomUserSerializer,
+                             FollowSerializer, SubscribeSerializer)
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from recipes.models import Subscribe
@@ -16,6 +17,7 @@ class CustomUserViewSet(UserViewSet):
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
     pagination_class = CustomPageNumberPagination
+
 
 class CustomUserViewSet(UserViewSet):
 
@@ -34,7 +36,10 @@ class CustomUserViewSet(UserViewSet):
             serializer.save(user=request.user)
             serializer = SubscribeSerializer(author)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        subscribe = get_object_or_404(Subscribe, user=request.user, author__id=id)
+        subscribe = get_object_or_404(
+            Subscribe,
+            user=request.user,
+            author__id=id)
         subscribe.delete()
         return Response(f'{request.user} отписался от {subscribe.author}',
                         status=status.HTTP_204_NO_CONTENT)

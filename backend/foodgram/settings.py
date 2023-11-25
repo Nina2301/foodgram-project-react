@@ -17,7 +17,7 @@ AUTH_USER_MODEL = 'users.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','http://*.127.0.0.1',
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com', 'http://*.127.0.0.1',
                         'http://localhost']
 
 INSTALLED_APPS = [
@@ -78,7 +78,7 @@ DATABASES = {
     }
 }
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.sqlite3',
 #        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
