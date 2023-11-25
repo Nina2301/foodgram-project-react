@@ -88,7 +88,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
-            cd foodgram/infra/
+            cd
             sudo touch .env
             sudo echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             sudo echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
@@ -97,6 +97,7 @@ jobs:
             sudo echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             sudo echo SECRET_KEY="${{ secrets.SECRET_KEY }}" >> .env
             sudo echo DEBUG=False >> .env
+            cd foodgram/infra/
             sudo docker compose -f docker-compose.production.yml pull
             sudo docker compose -f docker-compose.production.yml down
             sudo docker compose -f docker-compose.production.yml up -d
