@@ -140,3 +140,5 @@ STATIC_ROOT = '/app/backend_static/'
 
 MEDIA_URL = '/backend_media/'
 MEDIA_ROOT = '/app/backend_media/'
+
+RECIPES_LIMIT = 3

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import transaction
 from django.db.models import F
 from django.shortcuts import get_object_or_404
@@ -49,10 +50,10 @@ class CustomUserSerializer(UserSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        user = self.context.get('request').user
-        if user.is_anonymous:
+        request = self.context.get('request')
+        if request is None or request.user.is_anonymous:
             return False
-        return Subscribe.objects.filter(user=user, author=obj).exists()
+        return Subscribe.objects.filter(user=request.user, author=obj).exists()
 
 
 class SubscribeSerializer(CustomUserSerializer):
@@ -65,32 +66,41 @@ class SubscribeSerializer(CustomUserSerializer):
         )
         read_only_fields = ('email', 'username')
 
-    def validate(self, data):
-        author = self.instance
-        user = self.context.get('request').user
-        if Subscribe.objects.filter(author=author, user=user).exists():
-            raise ValidationError(
-                detail='У вас уже есть подписка на данного пользователя!',
-                code=status.HTTP_400_BAD_REQUEST
-            )
-        if user == author:
-            raise ValidationError(
-                detail='Нельзя подписываться на самого себя!',
-                code=status.HTTP_400_BAD_REQUEST
-            )
-        return data
-
     def get_recipes_count(self, obj):
         return obj.recipes.count()
 
     def get_recipes(self, obj):
-        request = self.context.get('request')
-        limit = request.GET.get('recipes_limit')
-        recipes = obj.recipes.all()
-        if limit:
-            recipes = recipes[:int(limit)]
-        serializer = RecipeSerializer(recipes, many=True, read_only=True)
-        return serializer.data
+        recipes = obj.recipes.all()[:settings.RECIPES_LIMIT]
+        return RecipeSerializer(recipes, many=True).data
+
+
+class FollowSerializer(ModelSerializer):
+    user = IntegerField(source='user.id')
+    author = IntegerField(source='author.id')
+
+    class Meta:
+        model = Subscribe
+        fields = ['user', 'author']
+
+    def validate(self, data):
+        user = data['user']['id']
+        author = data['author']['id']
+        subscribe_exist = Subscribe.objects.filter(
+             user=user, author__id=author
+        ).exists()
+        if user == author:
+            raise ValidationError(
+                {"errors": 'Нельзя подписываться на самого себя'}
+            )
+        elif subscribe_exist:
+            raise ValidationError({"errors": 'Вы уже подписаны на этого автора'})
+        return data
+    
+    def create(self, validated_data):
+        author = validated_data.get('author')
+        author = get_object_or_404(User, pk=author.get('id'))
+        user = validated_data.get('user')
+        return Subscribe.objects.create(user=user, author=author)
 
 
 class RecipeSerializer(ModelSerializer):
