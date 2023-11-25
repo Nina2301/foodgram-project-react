@@ -1,6 +1,6 @@
 from api.pagination import CustomPageNumberPagination
-from api.serializers import (CustomUserSerializer,
-                             FollowSerializer, SubscribeSerializer)
+from api.serializers import (CustomUserSerializer, FollowSerializer,
+                             SubscribeSerializer)
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from recipes.models import Subscribe
