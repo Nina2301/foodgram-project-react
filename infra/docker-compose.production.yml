@@ -12,8 +12,6 @@ services:
       - ./.env
     volumes:
       - pg_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     restart: always
   backend:
     image: nina2301/foodgram_backend
