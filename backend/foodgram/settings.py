@@ -17,7 +17,7 @@ AUTH_USER_MODEL = 'users.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com', 'http://*.127.0.0.1',
+CSRF_TRUSTED_ORIGINS = ['https://*.foodgram-nk.hopto.org', 'http://*.127.0.0.1',
                         'http://localhost']
 
 INSTALLED_APPS = [
