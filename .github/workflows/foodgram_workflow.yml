@@ -103,7 +103,7 @@ jobs:
             sudo docker compose -f docker-compose.production.yml up -d
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
-            sudo docker compose exec backend python manage.py loaddata ingredients.json
+#            sudo docker compose exec backend python manage.py loaddata ingredients.json
         
   send_message:
     runs-on: ubuntu-latest
