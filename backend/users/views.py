@@ -18,9 +18,6 @@ class CustomUserViewSet(UserViewSet):
     serializer_class = CustomUserSerializer
     pagination_class = CustomPageNumberPagination
 
-
-class CustomUserViewSet(UserViewSet):
-
     @action(detail=True,
             methods=["POST", "DELETE"],
             url_path='subscribe',
