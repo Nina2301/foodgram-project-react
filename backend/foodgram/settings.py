@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', '*')
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', '158.160.75.66', '127.0.0.1', 'localhost', 'foodgram-nk.hopto.org']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(', ')
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'colorfield',
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
@@ -136,9 +137,11 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/backend_static/'
-STATIC_ROOT = '/app/backend_static/'
+# STATIC_ROOT = '/app/backend_static/'
+STATIC_ROOT = os.path.join('/app', 'backend_static')
 
 MEDIA_URL = '/backend_media/'
-MEDIA_ROOT = '/app/backend_media/'
+# MEDIA_ROOT = '/app/backend_media/'
+MEDIA_ROOT = os.path.join('/app', 'backend_media')
 
 RECIPES_LIMIT = 3

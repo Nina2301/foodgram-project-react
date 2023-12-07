@@ -4,12 +4,13 @@ from django.db.models import F
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import (Ingredient, IngredientsInRecipe, Recipe, Subscribe,
-                            Tag)
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import IntegerField, SerializerMethodField
 from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer
+
+from recipes.models import (Ingredient, IngredientsInRecipe, Recipe, Subscribe,
+                            Tag)
 from users.models import User
 
 
@@ -98,10 +99,10 @@ class FollowSerializer(ModelSerializer):
         return data
 
     def create(self, validated_data):
-        author = validated_data.get('author')
-        author = get_object_or_404(User, pk=author.get('id'))
+        author_id = validated_data.get('author').get('id')
+#        author = get_object_or_404(User, pk=author.get('id'))
         user = validated_data.get('user')
-        return Subscribe.objects.create(user=user, author=author)
+        return Subscribe.objects.create(user=user, author_id=author_id)
 
 
 class RecipeSerializer(ModelSerializer):
@@ -197,10 +198,17 @@ class RecipeWriteSerializer(ModelSerializer):
             raise ValidationError({
                 'ingredients': 'Должен быть минимум один ингредиент в рецепте!'
             })
+        ingredient_ids = [item['id'] for item in ingredients]
+        existing_ingredients = Ingredient.objects.filter(id__in=ingredient_ids)
+        existing_ingredient_ids = set(existing_ingredients.values_list('id', flat=True))
         ingredients_list = []
         for item in ingredients:
-            ingredient = get_object_or_404(Ingredient, id=item['id'])
-            if ingredient in ingredients_list:
+            ingredient_id = item['id']
+            if ingredient_id not in existing_ingredient_ids:
+                raise ValidationError({
+                    'ingredients': 'Ингредиент должен быть существующим!'
+                })
+            if ingredient_id in ingredients_list:
                 raise ValidationError({
                     'ingredients': 'Ингредиент должен быть уникальным!'
                 })
@@ -208,7 +216,7 @@ class RecipeWriteSerializer(ModelSerializer):
                 raise ValidationError({
                     'amount': 'Количество ингредиента должно быть больше 0!'
                 })
-            ingredients_list.append(ingredient)
+            ingredients_list.append(ingredient_id)
         return value
 
     def validate_tags(self, value):

@@ -1,5 +1,7 @@
+from colorfield.fields import ColorField
 from django.core import validators
 from django.db import models
+
 from users.models import User
 
 
@@ -30,8 +32,8 @@ class Tag(models.Model):
         verbose_name='Название тега',
         unique=True,
     )
-    color = models.CharField(
-        max_length=7,
+    color = ColorField(
+        format="hex",
         verbose_name='Цвет в HEX',
         unique=True,
     )
@@ -95,7 +97,7 @@ class Recipe(models.Model):
         verbose_name_plural = 'Рецепты'
 
     def __str__(self):
-        return f'{self.author.email}, {self.name}'
+        return self.name
 
 
 class IngredientsInRecipe(models.Model):
