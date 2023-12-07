@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.db import transaction
 from django.db.models import F
-from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework.exceptions import ValidationError
@@ -200,7 +199,9 @@ class RecipeWriteSerializer(ModelSerializer):
             })
         ingredient_ids = [item['id'] for item in ingredients]
         existing_ingredients = Ingredient.objects.filter(id__in=ingredient_ids)
-        existing_ingredient_ids = set(existing_ingredients.values_list('id', flat=True))
+        existing_ingredient_ids = set(
+            existing_ingredients.values_list('id', flat=True)
+        )
         ingredients_list = []
         for item in ingredients:
             ingredient_id = item['id']

@@ -6,7 +6,6 @@ from django.core.management.base import BaseCommand
 
 from recipes.models import Ingredient
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -28,7 +27,9 @@ class Command(BaseCommand):
                         measurement_unit=row[measurement_unit_csv],
                     )
                     if not created:
-                        logger.info(f'Ингредиент {obj} уже есть в базе данных.')
+                        logger.info(
+                            f'Ингредиент {obj} уже есть в базе данных.'
+                        )
                 except UnicodeDecodeError as err:
                     logger.info(f'Ошибка в строке {row}: {err}')
         print('Данные успешно загружены.')
