@@ -5,6 +5,7 @@ from rest_framework.authtoken.models import TokenProxy
 from .models import User
 
 
+@admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
         'id',
@@ -27,6 +28,5 @@ class UserAdmin(admin.ModelAdmin):
         return obj.subscriber.count()
 
 
-admin.site.register(User, UserAdmin)
 admin.site.unregister(Group)
 admin.site.unregister(TokenProxy)
