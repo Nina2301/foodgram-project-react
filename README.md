@@ -14,8 +14,6 @@
 
 Админка доступна по [адресу](https://foodgram-nk.hopto.org/admin/), логин admin пароль admin
 
-Документация к API доступна [здесь](https://foodgram-nk.hopto.org/api/docs/)
-
 ## Запуск проекта на локальной машине:
 
 Установить Docker, Docker Compose (для Windows - актуальный Docker Desktop).
