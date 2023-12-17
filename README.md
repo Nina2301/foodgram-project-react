@@ -81,7 +81,7 @@ SECRET_KEY='секретный ключ Django'
 3. Скопировать со своего компьютера из папки infra на сервер в директорию infra/ файл docker-compose.production.yml:
   ```
   scp -i path_to_SSH/SSH_name docker-compose.production.yml \
-    username@server_ip:/home/username/infra/docker-compose.production.yml
+    username@server_ip:/home/username/foodgram/infra/docker-compose.production.yml
   ```
   ```
   (username - имя пользователя на сервере, IP - публичный IP сервера)
@@ -90,7 +90,7 @@ SECRET_KEY='секретный ключ Django'
 4. Скопировать со своего компьютера из папки infra на сервер в директорию infra/ файл .env:
   ```
   scp -i path_to_SSH/SSH_name .env \
-    username@server_ip:/home/username/taski/.env
+    username@server_ip:/home/username/foodgram/infra/.env
   ```
 
 5. На сервере из папки infra cоздать и запустить контейнеры Docker, последовательно выполнить команды по созданию миграций, 
