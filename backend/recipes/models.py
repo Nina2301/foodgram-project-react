@@ -69,8 +69,7 @@ class Recipe(models.Model):
     image = models.ImageField(
         verbose_name='Изображение рецепта',
         upload_to='recipes/',
-        blank=True,
-        null=True,
+        help_text="Добавьте изображение рецепта",
     )
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления (в минутах)',
@@ -133,6 +132,9 @@ class IngredientsInRecipe(models.Model):
             ),
         )
 
+    def __str__(self):
+        return f'{self.ingredient} – {self.amount}'
+
 
 class Favorite(models.Model):
     """ Модель для Избранного."""
@@ -188,6 +190,9 @@ class ShoppingCart(models.Model):
             ),
         )
 
+    def __str__(self):
+        return f'{self.user} добавил "{self.recipe}" в Корзину'
+
 
 class Subscribe(models.Model):
     """Модель для подписок."""
@@ -214,3 +219,6 @@ class Subscribe(models.Model):
                 name='unique_subscription'
             ),
         )
+
+    def __str__(self):
+        return f'{self.user.username} подписан на {self.author.username}'

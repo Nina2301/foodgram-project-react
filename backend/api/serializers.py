@@ -149,14 +149,19 @@ class RecipeReadSerializer(ModelSerializer):
         )
 
     def get_ingredients(self, obj):
-        recipe = obj
-        ingredients = recipe.ingredients.values(
+        # recipe = obj
+        # ingredients = recipe.ingredients.values(
+        #     'id',
+        #     'name',
+        #     'measurement_unit',
+        #     amount=F('ingredientsinrecipe__amount')
+        # )
+        return obj.ingredients.values(
             'id',
             'name',
             'measurement_unit',
             amount=F('ingredientsinrecipe__amount')
         )
-        return ingredients
 
     def get_is_favorited(self, obj):
         user = self.context.get('request').user
@@ -190,6 +195,13 @@ class RecipeWriteSerializer(ModelSerializer):
             'text',
             'cooking_time',
         )
+
+    def validate_image(self, value):
+        if not value:
+            raise ValidationError({
+                'image': 'Поле не должно быть пустым!'
+            })
+        return value
 
     def validate_ingredients(self, value):
         ingredients = value
